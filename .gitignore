@@ -1,0 +1,6 @@
+app/*
+.idea
+.env
+
+docker/logs/*
+docker/mysql/db_data

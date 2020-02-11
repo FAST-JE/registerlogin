@@ -1,0 +1,19 @@
+##!/bin/sh
+#set -e
+#
+##echo "composer install"
+##composer install --no-interaction --no-ansi
+##echo "dump-autoload"
+##composer dump-autoload
+#
+## touch /var/www/app/var/log/prod.log && ln -sf /dev/stdout /var/www/app/var/log/prod.log
+## touch /var/www/app/var/log/prod.deprecations.log && ln -sf /dev/stderr /var/www/app/var/log/prod.deprecations.log
+#
+#chmod -R 0700 /root/.ssh
+#
+## first arg is `-f` or `--some-option`
+#if [ "${1#-}" != "$1" ]; then
+#    set -- php-fpm "$@"
+#fi
+#
+#exec "$@"
