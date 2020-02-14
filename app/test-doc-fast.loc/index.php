@@ -22,6 +22,19 @@ $db = DB::getInstance();
 
 $user = new User();
 $valid = new Validation();
+
+$valid->validateData(
+    [
+        'email' => 'fast@ya.ru',
+        'password' => '1234'
+    ],
+    [
+        'email' => 'required',
+        'password' => 'required, min:5'
+    ]
+);
+var_dump($valid->errors);
+
 if (isset($_POST['email']) && isset($_POST['password']) && $_POST['func'] == 'register') {
     $email = $_POST['email'];
     $pass = $_POST['password'];
