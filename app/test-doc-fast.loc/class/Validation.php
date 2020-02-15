@@ -82,7 +82,7 @@ class Validation
     public function requireParam($data, $required_param)
     {
         if (!isset($data[$required_param]))
-            array_push($this->errors, "field is not found");
+            array_push($this->errors, "field '{$required_param}' is not found");
 
         return true;
     }

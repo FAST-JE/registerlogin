@@ -23,36 +23,38 @@ $db = DB::getInstance();
 $user = new User();
 $valid = new Validation();
 
-$valid->validateData(
-    [
-        'email' => 'fast@ya.ru',
-        'password' => '1234'
-    ],
-    [
-        'email' => 'required',
-        'password' => 'required, min:5'
-    ]
-);
-var_dump($valid->errors);
-
-if (isset($_POST['email']) && isset($_POST['password']) && $_POST['func'] == 'register') {
+if ($_POST['func'] == 'register') {
+    $valid->validateData(
+        $_POST,
+        [
+            'email' => 'required, email',
+            'password' => 'required, min:5'
+        ]
+    );
     $email = $_POST['email'];
     $pass = $_POST['password'];
     try {
-        if (!$valid->validateEmptyInput($email) && !$valid->validateEmptyInput($pass)) throw new \Exception("Fields is not fill");
-        if (!$valid->validateEmail($email)) throw new \Exception("Emails is not valid");
-        $user->register($email, $pass);
+        if (empty($valid->errors)) {
+            $user->register($email, $pass);
+        }
     } catch (Exception $e) {
         array_push($errors, $e->getMessage());
     }
 }
-if ($_POST['email'] && $_POST['password'] && $_POST['func'] == 'login') {
+if ($_POST['func'] == 'login') {
+    $valid->validateData(
+        $_POST,
+        [
+            'email' => 'required, email',
+            'password' => 'required'
+        ]
+    );
     $email = $_POST['email'];
     $pass = $_POST['password'];
     try {
-        if (!$valid->validateEmptyInput($email) && !$valid->validateEmptyInput($pass)) throw new \Exception("Fields is not fill");
-        if (!$valid->validateEmail($email)) throw new \Exception("Emails is not valid");
-        $user->login($email, $pass);
+        if (empty($valid->errors)) {
+            $user->login($email, $pass);
+        }
     } catch (Exception $e) {
         array_push($errors, $e->getMessage());
     }
@@ -61,9 +63,10 @@ if ($_POST['func'] == 'logout') {
     $user->logout();
 }
 
-if (!empty($errors)) {
-    echo "<h1 style='color: red;'>{$errors[0]}</h1>";
+if (!empty($valid->errors)) {
+    echo "<h1 style='color: red;'>{$valid->errors[0]}</h1>";
 }
+
 
 ?>
 <? if (!$user->isLogged()) { ?>
