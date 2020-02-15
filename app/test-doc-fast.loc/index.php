@@ -7,6 +7,7 @@ require dirname(BASE_DIR).DS.'vendor'.DS.'autoload.php';
 require BASE_DIR . DS . 'db' . DS . 'DB.php';
 require BASE_DIR . DS . 'class' . DS . 'User.php';
 require BASE_DIR . DS . 'class' . DS . 'Validation.php';
+require BASE_DIR . DS . 'class' . DS . 'Flash.php';
 
 \Dotenv\Dotenv::createImmutable(BASE_DIR . '/..')->load();
 
@@ -16,7 +17,18 @@ require BASE_DIR . DS . 'class' . DS . 'Validation.php';
 //define('BD_NAME', getenv('MYSQL_DATABASE'));
 //define('DB_CHAR', 'utf8');
 
+
+//Flash::setWarning("email is not valid");
+
+
+//var_dump(Flash::getMessageText());
+
+//if (isset($_POST['func'])) {
+//    echo 'func exist';
+//}
 $errors = [];
+
+//print_r($_POST);
 
 $db = DB::getInstance();
 
@@ -40,6 +52,9 @@ if ($_POST['func'] == 'register') {
     } catch (Exception $e) {
         array_push($errors, $e->getMessage());
     }
+
+    Flash::setWarning($valid->errors[0] ?? $errors[0]);
+    header("Location: /index.php");
 }
 if ($_POST['func'] == 'login') {
     $valid->validateData(
@@ -58,13 +73,17 @@ if ($_POST['func'] == 'login') {
     } catch (Exception $e) {
         array_push($errors, $e->getMessage());
     }
+    Flash::setWarning($valid->errors[0] ?? $errors[0]);
+    header("Location: /index.php");
 }
 if ($_POST['func'] == 'logout') {
     $user->logout();
 }
 
-if (!empty($valid->errors)) {
-    echo "<h1 style='color: red;'>{$valid->errors[0]}</h1>";
+if ($_POST['func'] != 'register' && $_POST['func'] != 'login') {
+    if (Flash::getMessageType() == 3) {
+        echo "<h1 style='color: red;'>".Flash::getMessageText()."</h1>";
+    }
 }
 
 
