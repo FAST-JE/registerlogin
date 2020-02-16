@@ -12,6 +12,8 @@ services:
 
     nginx:
         image: nginx
+        depends_on:
+          - db
         restart: always
         ports:
           - 80:80

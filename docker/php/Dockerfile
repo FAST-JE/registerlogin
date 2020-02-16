@@ -96,6 +96,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 #    composer global dumpautoload --optimize && \
 #    composer clear-cache
 
+EXPOSE 9000
+
 RUN mkdir -p /var/www/app/var && chown -R www-data:www-data /var/www/app
 
 WORKDIR /var/www/app
