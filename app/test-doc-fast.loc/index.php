@@ -18,73 +18,9 @@ require BASE_DIR . DS . 'class' . DS . 'Flash.php';
 //define('DB_CHAR', 'utf8');
 
 
-//Flash::setWarning("email is not valid");
-
-
-//var_dump(Flash::getMessageText());
-
-//if (isset($_POST['func'])) {
-//    echo 'func exist';
-//}
-//$errors = [];
-
-//print_r($_POST);
-
 $db = DB::getInstance();
 
 $user = new User();
-//$valid = new Validation();
-
-//if ($_POST['func'] == 'register') {
-//    $valid->validateData(
-//        $_POST,
-//        [
-//            'email' => 'required, email',
-//            'password' => 'required, min:5'
-//        ]
-//    );
-//    $email = $_POST['email'];
-//    $pass = $_POST['password'];
-//    try {
-//        if (empty($valid->errors)) {
-//            $user->register($email, $pass);
-//        }
-//    } catch (Exception $e) {
-//        array_push($errors, $e->getMessage());
-//    }
-//
-//    Flash::setWarning($valid->errors[0] ?? $errors[0]);
-//    header("Location: /index.php");
-//}
-//if ($_POST['func'] == 'login') {
-//    $valid->validateData(
-//        $_POST,
-//        [
-//            'email' => 'required, email',
-//            'password' => 'required'
-//        ]
-//    );
-//    $email = $_POST['email'];
-//    $pass = $_POST['password'];
-//    try {
-//        if (empty($valid->errors)) {
-//            $user->login($email, $pass);
-//        }
-//    } catch (Exception $e) {
-//        array_push($errors, $e->getMessage());
-//    }
-//    Flash::setWarning($valid->errors[0] ?? $errors[0]);
-//    header("Location: /index.php");
-//}
-//if ($_POST['func'] == 'logout') {
-//    $user->logout();
-//}
-
-//if ($_POST['func'] != 'register' && $_POST['func'] != 'login') {
-//    if (Flash::getMessageType() == 3) {
-//        echo "<h1 style='color: red;'>".Flash::getMessageText()."</h1>";
-//    }
-//}
 
 if (Flash::getMessageType() == 3) {
     echo "<h1 style='color: red;'>".Flash::getMessageText()."</h1>";
