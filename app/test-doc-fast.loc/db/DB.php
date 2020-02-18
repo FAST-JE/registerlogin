@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Db;
+use \PDO;
 /**
  * Class wrapper for working with PDO
  */

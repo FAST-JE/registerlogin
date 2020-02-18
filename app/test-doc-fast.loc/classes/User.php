@@ -1,11 +1,16 @@
 <?php
 
+namespace App\Classes;
+use App\Db\DB;
 
 class User
 {
     public function register ($email, $password)
     {
-        if ($this->emailExist($email)) throw new \Exception("This email already exists");
+        if ($this->emailExist($email)) {
+            return ['email'=>'This email already exist'];
+        }
+
         $user_hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $query = "INSERT INTO `users` (`email`, `password`) VALUES(:email, :password)";
@@ -15,20 +20,20 @@ class User
             'password' => $user_hashed_password,
         ];
 
-        DB::sql($query, $args);
+        \App\Db\DB::sql($query, $args);
 
-        return true;
+        return '';
     }
 
     public function login($email, $password)
     {
-        $data = DB::getRow("SELECT * FROM `users` WHERE `email` = ?", [$email]);
+        $data = \App\Db\DB::getRow("SELECT * FROM `users` WHERE `email` = ?", [$email]);
         if (!empty($data) && password_verify($password, $data['password'])) {
             $_SESSION['user_id'] = $data['id'];
         } else {
-            throw new \Exception("Email or password incorrect");
+            return ['error'=>'Email or password incorrect'];
         }
-        return true;
+        return '';
     }
 
     public function isLogged()
@@ -36,7 +41,7 @@ class User
         if (isset($_SESSION['user_id'])) {
             return true;
         } else {
-            return false;
+            return '';
         }
     }
 
@@ -50,6 +55,6 @@ class User
 
     public function emailExist ($email)
     {
-        return DB::getRow("SELECT `id` FROM `users` WHERE `email` = ? LIMIT 1", [$email]) ? true : false;
+        return \App\Db\DB::getRow("SELECT `id` FROM `users` WHERE `email` = ? LIMIT 1", [$email]) ? true : false;
     }
 }

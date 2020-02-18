@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Classes;
 
 class Flash {
     static protected $_name = 'flash';

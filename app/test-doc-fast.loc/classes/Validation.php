@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Classes;
+use \ReflectionClass;
 
 class Validation
 {
@@ -9,12 +11,25 @@ class Validation
      *
      * @return bool
      */
-    public function validateEmail($email)
+    public function validateEmail($field_value, $field_name)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-            array_push($this->errors, "email is not valid");
+        if (!filter_var($field_value, FILTER_VALIDATE_EMAIL))
+            $this->errors = array_merge($this->errors, [$field_name => "email is not valid"]);
 
         return true;
+    }
+
+    /*
+     *
+     */
+    protected function getFuncArgNames($func_name) {
+        $f = new ReflectionClass($this);
+        $f = $f->getMethod($func_name);
+        $result = array();
+        foreach ($f->getParameters() as $param) {
+            $result[] = $param->name;
+        }
+        return $result;
     }
 
     /*
@@ -27,9 +42,9 @@ class Validation
     {
 
         $methods = [
-            'email' => ['name' => 'validateEmail', 'params' => ['field'=>'']],
-            'required' => ['name' => 'requireParam', 'params' => ['data'=>'', 'field_name'=>'']],
-            'min' => ['name' => 'minLength', 'params' => ['field'=>'']]
+            'min' =>        ['name' => 'minLength',     'params' => array_fill_keys(array_values($this->getFuncArgNames('minLength')), '')],
+            'email' =>      ['name' => 'validateEmail', 'params' => array_fill_keys(array_values($this->getFuncArgNames('validateEmail')), '')],
+            'required' =>   ['name' => 'requireParam',  'params' => array_fill_keys(array_values($this->getFuncArgNames('requireParam')), '')]
         ];
 
         if (!is_array($data) || empty($params) && !is_array($params))
@@ -43,12 +58,13 @@ class Validation
 
             foreach ($v as $param) {
                 $paramsForCallback = [];
+                $options = null;
 
                 if (strpos($param, ":")) {
                     $param_part = array_map('trim', explode(':', $param));
                     $param = $param_part[0];
                     unset($param_part[0]);
-                    $paramsForCallback = array_merge($paramsForCallback, $param_part);
+                    $options = array_values($param_part);
                 }
 
                 if ($methods[$param]['params']) {
@@ -56,8 +72,11 @@ class Validation
                         if ($key_item == 'data')
                             $methods[$param]['params'][$key_item] = $data;
 
-                        if ($key_item == 'field')
+                        if ($key_item == 'field_value')
                             $methods[$param]['params'][$key_item] = $data[$k];
+
+                        if ($key_item == 'options')
+                            $methods[$param]['params'][$key_item] = $options;
 
                         if ($key_item == 'field_name')
                             $methods[$param]['params'][$key_item] = $k;
@@ -79,18 +98,18 @@ class Validation
      *
      * @return string
      */
-    public function requireParam($data, $required_param)
+    public function requireParam($data, $field_value, $field_name)
     {
-        if (!isset($data[$required_param]))
-            array_push($this->errors, "field '{$required_param}' is not found");
+        if (!isset($data[$field_name]) || empty($field_value))
+            $this->errors = array_merge($this->errors, [$field_name => "field '{$field_name}' is required"]);
 
         return true;
     }
 
-    public function minLength($field, $min_length)
+    public function minLength($field_value, $field_name, array $options)
     {
-        if (strlen($field) < $min_length)
-            array_push($this->errors, "the field must not be less than {$min_length} characters");
+        if (strlen($field_value) < intval($options[0]))
+            $this->errors = array_merge($this->errors, [$field_name => "the field must not be less than {$options[0]} characters"]);
 
         return true;
     }
