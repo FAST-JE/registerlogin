@@ -1,4 +1,5 @@
 <?php
+$this->layout('/layouts/main', ['title' => 'register']);
 if (!$user->isLogged()) { ?>
 <h1>Register</h1>
 <form action="/handler" method="POST">

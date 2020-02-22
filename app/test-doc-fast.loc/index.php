@@ -25,26 +25,34 @@ $user = new App\Classes\User();
 $valid = new App\Classes\Validation();
 
 $routes = [
-    '/'         => 'pages'.DS.'index.php',
-    '/index'    => 'pages'.DS.'index.php',
-    '/register' => 'pages'.DS.'register.php',
-    '/login'    => 'pages'.DS.'login.php',
-    '/handler'  => 'pages'.DS.'handler.php',
-    '/logout'   => 'pages'.DS.'logout.php'
+    '/'         => 'index',
+    '/index'    => 'index',
+    '/register' => 'register',
+    '/login'    => 'login',
+    '/handler'  => 'handler',
+    '/logout'   => 'logout'
 ];
 
 
 $route = $_SERVER['REQUEST_URI'];
 
-ob_start();
+//ob_start();
+
+//if (array_key_exists($route, $routes)) {
+//    include $routes[$route];
+//} else {
+//    echo '404 not found';
+//}
+//
+//$content = ob_get_clean();
+
+//require 'layouts'.DS.'main.php';
+
+
+$templates = new League\Plates\Engine('views');
 
 if (array_key_exists($route, $routes)) {
-    include $routes[$route];
+    echo $templates->render($routes[$route]);
 } else {
-    echo '404 not found';
+    echo $templates->render('404', ['title' => 'Page not found']);
 }
-
-$content = ob_get_clean();
-
-require 'templates'.DS.'main.php';
-
