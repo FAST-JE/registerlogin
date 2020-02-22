@@ -1,6 +1,7 @@
 {
     "require": {
-        "vlucas/phpdotenv": "^4.1"
+        "vlucas/phpdotenv": "^4.1",
+        "aura/sqlquery": "^2.7"
     },
     "autoload": {
         "psr-4": {

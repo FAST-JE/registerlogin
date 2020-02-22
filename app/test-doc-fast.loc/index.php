@@ -19,6 +19,7 @@ require dirname(BASE_DIR).DS.'vendor'.DS.'autoload.php';
 //define('DB_CHAR', 'utf8');
 
 
+
 $db = App\Db\DB::getInstance();
 $user = new App\Classes\User();
 $valid = new App\Classes\Validation();
